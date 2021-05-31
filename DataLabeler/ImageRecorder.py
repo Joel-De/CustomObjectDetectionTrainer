@@ -12,6 +12,11 @@ basename = 'img_'
 if not os.path.exists(pathname):
     os.mkdir(pathname)
 
+
+# Makes Json folder for utility
+if not os.path.exists("Json"):
+    os.mkdir("Json")
+
 Camera = cv2.VideoCapture(0)
 Camera.set(3, 1280)
 Camera.set(4, 720)
