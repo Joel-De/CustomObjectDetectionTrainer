@@ -1,10 +1,11 @@
-import torch
-import torchvision
 import json
+
 import cv2
 import numpy as np
-from torchvision.models.detection.backbone_utils import mobilenet_backbone
+import torch
+import torchvision
 from torchvision.models.detection import FasterRCNN
+from torchvision.models.detection.backbone_utils import mobilenet_backbone
 from torchvision.models.detection.rpn import AnchorGenerator
 
 
@@ -26,7 +27,9 @@ class DetectImg:
         anchor_sizes = ((32, 64, 128, 256, 512,),) * 3
         aspect_ratios = ((0.5, 1.0, 2.0),) * len(anchor_sizes)
         roi_pooler = torchvision.ops.MultiScaleRoIAlign(featmap_names=['0'], output_size=7, sampling_ratio=1)
-        self.model = FasterRCNN(backbone, self.numClasses, rpn_anchor_generator=AnchorGenerator(anchor_sizes, aspect_ratios), box_roi_pool=roi_pooler)
+        self.model = FasterRCNN(backbone, self.numClasses,
+                                rpn_anchor_generator=AnchorGenerator(anchor_sizes, aspect_ratios),
+                                box_roi_pool=roi_pooler)
         self.model.load_state_dict(torch.load(ModelPath))
         self.model.eval()
         self.model.to(self.device)
@@ -71,16 +74,13 @@ if __name__ == '__main__':
     Camera.set(3, 1280)
     Camera.set(4, 720)
 
-    Predictor = DetectImg("Models/model_25.pth")
+    Predictor = DetectImg("")
 
     while True:
         _, img = Camera.read()
-
         OutputDict = Predictor.Predict(img)
-
         for key in OutputDict.keys():
             for box in OutputDict[key]:
-
                 point1 = box[0]
                 point2 = box[1]
                 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -88,11 +88,8 @@ if __name__ == '__main__':
                 fontScale = 2
                 color = (0, 0, 255)
                 thickness = 2
-                img = cv2.putText(img, key, org, font,fontScale, color, thickness, cv2.LINE_AA)
+                img = cv2.putText(img, key, org, font, fontScale, color, thickness, cv2.LINE_AA)
                 cv2.rectangle(img, point1, point2, (220, 0, 0), 3)
 
         cv2.imshow("Preview", img)
         cv2.waitKey(1)
-
-
-

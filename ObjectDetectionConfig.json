@@ -8,8 +8,6 @@
 
   "SaveDir" : "Models",
   "DatasetDir" : "Dataset",
-
-
   "BatchSize" : 2,
   "Epochs" : 30,
   "ModelID" : "mobilenet_v3_large"

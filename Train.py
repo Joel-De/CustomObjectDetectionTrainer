@@ -1,15 +1,16 @@
+import json
 import os
+import time
+
+import cv2
 import numpy as np
 import torch
-import json
 import torchvision
 from torch.utils.data import DataLoader
-from torchvision.models.detection.backbone_utils import mobilenet_backbone
 from torchvision.models.detection import FasterRCNN
+from torchvision.models.detection.backbone_utils import mobilenet_backbone
 from torchvision.models.detection.rpn import AnchorGenerator
 from tqdm import tqdm
-import cv2
-import time
 
 
 class Averager:
@@ -111,7 +112,8 @@ if __name__ == '__main__':
     anchor_sizes = ((32, 64, 128, 256, 512,),) * 3
     aspect_ratios = ((0.5, 1.0, 2.0),) * len(anchor_sizes)
     roi_pooler = torchvision.ops.MultiScaleRoIAlign(featmap_names=['0'], output_size=7, sampling_ratio=1)
-    model = FasterRCNN(backbone, num_classes, rpn_anchor_generator=AnchorGenerator(anchor_sizes, aspect_ratios), box_roi_pool=roi_pooler)
+    model = FasterRCNN(backbone, num_classes, rpn_anchor_generator=AnchorGenerator(anchor_sizes, aspect_ratios),
+                       box_roi_pool=roi_pooler)
 
     train_dataset = ObjectDetection(ObjectDetectionConfig['DatasetDir'], ObjectDetectionConfig['Entities'])
     indices = torch.randperm(len(train_dataset)).tolist()
@@ -147,7 +149,7 @@ if __name__ == '__main__':
             lr_scheduler.step()
             print("Learning rate:" + str(lr_scheduler.get_last_lr()))
 
-        if epoch % 1 == 0:
-            torch.save(model.state_dict(), "Models/model_" + str(epoch) + ".pth")
+
+        torch.save(model.state_dict(), "Models/model_" + str(epoch) + ".pth")
 
         print(f"Epoch #{epoch} loss: {loss_hist.value}")

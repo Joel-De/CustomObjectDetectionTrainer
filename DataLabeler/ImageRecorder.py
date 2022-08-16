@@ -1,8 +1,8 @@
 import os
-import cv2
 import time
-from tqdm import tqdm
 
+import cv2
+from tqdm import tqdm
 
 time.sleep(2)
 ImageCount = 200
@@ -11,7 +11,6 @@ basename = 'img_'
 
 if not os.path.exists(pathname):
     os.mkdir(pathname)
-
 
 # Makes Json folder for utility
 if not os.path.exists("Json"):
